@@ -3,10 +3,10 @@ import { StyleSheet, Text, View, Image } from "react-native";
 export default function ProductCard() {
   return (
     <View style={styles.card}>
-    <Image
-    source={require("../images/paard.webp")}
-    style={styles.image}
-    />
+      <Image
+        source={require("../images/paard.webp")}
+        style={styles.image}
+      />
       <Text style={styles.title}>Mooi paardje</Text>
       <Text style={styles.description}>Pure PK</Text>
     </View>
@@ -20,6 +20,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     marginVertical: 14,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
   },
   image: {
     width: "100%",
