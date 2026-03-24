@@ -1,3 +1,5 @@
+import BlogCard from "../components/BlogCard";
+import ProductCard from "../components/ProductCard";
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -11,69 +13,116 @@ import {
   Switch,
   Alert,
 } from "react-native";
-import ProductCard from "../components/ProductCard";
+
 
 const HomeScreen = ({ navigation }) => {
-    const [searchText, setSearchText] = useState("");
-    const [isEnabled, setIsEnabled] = useState(false);
-  
-    return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.heading}>Halloop</Text>
-        <Text style={styles.subText}>
-          Dit is mijn productoverzicht met componenten in React Native.
-        </Text>
-  
-        <TextInput
-          style={styles.input}
-          placeholder="Zoek een product..."
-          value={searchText}
-          onChangeText={setSearchText}
+  const [searchText, setSearchText] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.heading}>Halloop</Text>
+      <Text style={styles.subText}>
+        Dit is mijn productoverzicht met componenten in React Native.
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Zoek een product..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchText}>Donkere modus</Text>
+        <Switch
+          value={isEnabled}
+          onValueChange={() => setIsEnabled(!isEnabled)}
         />
-  
-        <View style={styles.switchContainer}>
-          <Text style={styles.switchText}>Donkere modus</Text>
-          <Switch
-            value={isEnabled}
-            onValueChange={() => setIsEnabled((previousState) => !previousState)}
-          />
-        </View>
-  
-        <Pressable
-          style={styles.pressableButton}
-          onPress={() => Alert.alert("Klik!", "Je hebt op Pressable gedrukt")}
-        >
-          <Text style={styles.pressableText}>Klik hier</Text>
-        </Pressable>
-  
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Meer info"
-            onPress={() => Alert.alert("Info", "Hier komt later meer info")}
-          />
-        </View>
-  
-        <Text style={styles.sectionTitle}>Mijn producten</Text>
-  
-        <ProductCard
-          title="Paardjes"
-          description="Elegant en sierlijk"
-          price="€4500"
-          image={require("../images/paard.webp")}
-          onPress={() =>
-            navigation.navigate("Details", {
-              title: "Paardjes",
-              description: "Elegant en sierlijk",
-              price: "4500",
-              image: require("../images/paard.webp"),
-            })
-          }
+      </View>
+
+      <Pressable
+        style={styles.pressableButton}
+        onPress={() => Alert.alert("Klik!", "Je hebt op Pressable gedrukt")}
+      >
+        <Text style={styles.pressableText}>Klik hier</Text>
+      </Pressable>
+
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Meer info"
+          onPress={() => Alert.alert("Info", "Hier komt later meer info")}
         />
-  
-        <StatusBar style="auto" />
-      </ScrollView>
-    );
-  };
+      </View>
+
+      <Text style={styles.sectionTitle}>Mijn producten</Text>
+
+      <ProductCard
+  title="Paard"
+  description="Elegant en sierlijk"
+  price={4500}
+  image={require("../images/paard.webp")}
+  onPress={() =>
+    navigation.navigate("Details", {
+      type: "product",
+      title: "Paard",
+      description: "Elegant en sierlijk",
+      price: 4500,
+      image: require("../images/paard.webp"),
+    })
+  }
+/>
+
+      <ProductCard
+        title="Zadel"
+        description="Comfortabel en stevig"
+        price={300}
+        image={require("../images/zadel.jpg")}
+        onPress={() =>
+          navigation.navigate("Details", {
+            type: "product",
+            title: "Zadel",
+            description: "Comfortabel en stevig",
+            price: 300,
+            image: require("../images/zadel.jpg"),
+          })
+        }
+      />
+
+<Text style={styles.sectionTitle}>Blogs</Text>
+
+<BlogCard
+  title="Hoe verzorg je een paard?"
+  description="Tips voor dagelijkse verzorging."
+  image={require("../images/paard.webp")}
+  onPress={() =>
+    navigation.navigate("Details", {
+      type: "blog",
+      title: "Hoe verzorg je een paard?",
+      description: "Tips voor dagelijkse verzorging.",
+      image: require("../images/paard.webp"),
+    })
+  }
+/>
+
+<BlogCard
+  title="Waarom een goed zadel belangrijk is"
+  description="Comfort en veiligheid voor ruiter en paard."
+  image={require("../images/paard.webp")}
+  onPress={() =>
+    navigation.navigate("Details", {
+      type: "blog",
+      title: "Waarom een goed zadel belangrijk is",
+      description: "Comfort en veiligheid voor ruiter en paard.",
+      image: require("../images/paard.webp"),
+    })
+  }
+/>
+
+      <StatusBar style="auto" />
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
