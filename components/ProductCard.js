@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   image: {
-    width: "100%",
-    height: 170,
+    width: 250,
+    height: 250,
     borderRadius: 14,
     resizeMode: "cover",
   },
