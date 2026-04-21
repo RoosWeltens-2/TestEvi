@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
+import { colors } from "../styles/colors";
 
 const PRODUCTS_URL =
   "https://api.webflow.com/v2/sites/698c7fd7b34b864abf927c87/products";
@@ -39,15 +40,26 @@ const categoryNames = {
   "699efbabf676b77ac6dc7783": "Posters",
 };
 
+const stripHtml = (html) => {
+  if (!html) return "";
+  return html
+    .replace(/<\/h2>/g, "\n\n")
+    .replace(/<\/p>/g, "\n\n")
+    .replace(/<br\s*\/?>/g, "\n")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+};
+
 const HomeScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
-
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("price-asc");
+
+  const theme = isEnabled ? colors.dark : colors.light;
 
   useEffect(() => {
     fetch(PRODUCTS_URL, {
@@ -90,20 +102,11 @@ const HomeScreen = ({ navigation }) => {
         const mappedBlogs = (data.items || []).map((item) => {
           const fieldData = item.fieldData || {};
 
-          const rawCategories =
-            fieldData.category ||
-            fieldData.categories ||
-            fieldData["blog-category"] ||
-            [];
-
           return {
             id: item.id,
             title: fieldData.name || "",
-            description:
-              fieldData.description ||
-              fieldData["short-description"] ||
-              fieldData.summary ||
-              "",
+            summary: fieldData["post-summary"] || "",
+            body: stripHtml(fieldData["post-body"] || ""),
             image: {
               uri:
                 fieldData["main-image"]?.url ||
@@ -111,11 +114,6 @@ const HomeScreen = ({ navigation }) => {
                 fieldData.thumbnail?.url ||
                 "",
             },
-            categoryIds: Array.isArray(rawCategories)
-              ? rawCategories
-              : rawCategories
-              ? [rawCategories]
-              : [],
           };
         });
 
@@ -124,11 +122,12 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => console.error("Error fetching blogs:", error));
   }, []);
 
-  const filteredProducts = products.filter((p) => {
+  const filteredProducts = products.filter((product) => {
     const matchesCategory =
-      selectedCategory === "" || p.categoryIds.includes(selectedCategory);
+      selectedCategory === "" ||
+      product.categoryIds.includes(selectedCategory);
 
-    const matchesSearch = p.title
+    const matchesSearch = product.title
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
 
@@ -143,28 +142,26 @@ const HomeScreen = ({ navigation }) => {
     return 0;
   });
 
-  const filteredBlogs = blogs.filter((b) => {
-    const matchesSearch = b.title
+  const filteredBlogs = blogs.filter((blog) => {
+    const matchesSearch = blog.title
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
 
     return matchesSearch;
   });
 
-  const backgroundColor = isEnabled ? "#111827" : "#f5f5f5";
-  const cardColor = isEnabled ? "#1f2937" : "#ffffff";
-  const textColor = isEnabled ? "#ffffff" : "#222222";
-  const subTextColor = isEnabled ? "#d1d5db" : "#555555";
-  const inputTextColor = isEnabled ? "#ffffff" : "#222222";
-  const borderColor = isEnabled ? "#374151" : "#cccccc";
-
   return (
     <ScrollView
-      contentContainerStyle={[styles.container, { backgroundColor }]}
+      contentContainerStyle={[
+        styles.container,
+        { backgroundColor: theme.background },
+      ]}
     >
-      <Text style={[styles.heading, { color: textColor }]}>Halloo</Text>
+      <Text style={[styles.heading, { color: theme.text }]}>
+        Posters & Kunstprints
+      </Text>
 
-      <Text style={[styles.subText, { color: subTextColor }]}>
+      <Text style={[styles.subText, { color: theme.subText }]}>
         Dit is mijn product- en blogoverzicht met componenten in React Native.
       </Text>
 
@@ -172,13 +169,13 @@ const HomeScreen = ({ navigation }) => {
         style={[
           styles.input,
           {
-            backgroundColor: cardColor,
-            color: inputTextColor,
-            borderColor: borderColor,
+            backgroundColor: theme.card,
+            color: theme.text,
+            borderColor: theme.border,
           },
         ]}
         placeholder="Zoek een product of blog..."
-        placeholderTextColor={isEnabled ? "#9ca3af" : "#6b7280"}
+        placeholderTextColor={isEnabled ? "#d6d0cb" : "#777777"}
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
@@ -187,23 +184,24 @@ const HomeScreen = ({ navigation }) => {
         style={[
           styles.switchContainer,
           {
-            backgroundColor: cardColor,
+            backgroundColor: theme.card,
+            borderColor: theme.border,
           },
         ]}
       >
-        <Text style={[styles.switchText, { color: textColor }]}>
+        <Text style={[styles.switchText, { color: theme.text }]}>
           Donkere modus
         </Text>
         <Switch
           value={isEnabled}
           onValueChange={() => setIsEnabled(!isEnabled)}
-          trackColor={{ false: "#767577", true: "#60a5fa" }}
-          thumbColor={isEnabled ? "#2563eb" : "#f4f3f4"}
+          trackColor={{ false: "#c7c7c7", true: theme.primary }}
+          thumbColor={isEnabled ? "#ffffff" : "#f4f3f4"}
         />
       </View>
 
       <Pressable
-        style={styles.pressableButton}
+        style={[styles.pressableButton, { backgroundColor: theme.primary }]}
         onPress={() => Alert.alert("Klik!", "Je hebt op Pressable gedrukt")}
       >
         <Text style={styles.pressableText}>Klik hier</Text>
@@ -212,11 +210,12 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <Button
           title="Meer info"
+          color={theme.primary}
           onPress={() => Alert.alert("Info", "Hier komt later meer info")}
         />
       </View>
 
-      <Text style={[styles.filterLabel, { color: textColor }]}>
+      <Text style={[styles.filterLabel, { color: theme.text }]}>
         Filter op categorie
       </Text>
 
@@ -224,15 +223,15 @@ const HomeScreen = ({ navigation }) => {
         style={[
           styles.pickerWrapper,
           {
-            backgroundColor: cardColor,
-            borderColor: borderColor,
+            backgroundColor: theme.card,
+            borderColor: theme.border,
           },
         ]}
       >
         <Picker
           selectedValue={selectedCategory}
           onValueChange={setSelectedCategory}
-          style={{ width: "100%", color: textColor }}
+          style={{ width: "100%", color: theme.text }}
         >
           {Object.entries(categoryNames).map(([id, name]) => (
             <Picker.Item key={id} label={name} value={id} />
@@ -240,7 +239,7 @@ const HomeScreen = ({ navigation }) => {
         </Picker>
       </View>
 
-      <Text style={[styles.filterLabel, { color: textColor }]}>
+      <Text style={[styles.filterLabel, { color: theme.text }]}>
         Sorteer producten
       </Text>
 
@@ -248,15 +247,15 @@ const HomeScreen = ({ navigation }) => {
         style={[
           styles.pickerWrapper,
           {
-            backgroundColor: cardColor,
-            borderColor: borderColor,
+            backgroundColor: theme.card,
+            borderColor: theme.border,
           },
         ]}
       >
         <Picker
           selectedValue={sortOption}
           onValueChange={setSortOption}
-          style={{ width: "100%", color: textColor }}
+          style={{ width: "100%", color: theme.text }}
         >
           <Picker.Item label="Prijs oplopend" value="price-asc" />
           <Picker.Item label="Prijs aflopend" value="price-desc" />
@@ -265,7 +264,7 @@ const HomeScreen = ({ navigation }) => {
         </Picker>
       </View>
 
-      <Text style={[styles.sectionTitle, { color: textColor }]}>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>
         Mijn producten
       </Text>
 
@@ -287,20 +286,22 @@ const HomeScreen = ({ navigation }) => {
         />
       ))}
 
-      <Text style={[styles.sectionTitle, { color: textColor }]}>Blogs</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>Blogs</Text>
 
       {filteredBlogs.map((blog) => (
         <BlogCard
           key={blog.id}
           title={blog.title}
-          description={blog.description}
+          description={blog.summary}
           image={blog.image}
           isDarkMode={isEnabled}
           onPress={() =>
             navigation.navigate("Details", {
               type: "blog",
               isDarkMode: isEnabled,
-              ...blog,
+              title: blog.title,
+              description: blog.body,
+              image: blog.image,
             })
           }
         />
@@ -322,11 +323,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
   },
   subText: {
     fontSize: 16,
     textAlign: "center",
     marginBottom: 20,
+    lineHeight: 22,
   },
   input: {
     width: "100%",
@@ -343,19 +346,19 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginBottom: 20,
+    borderWidth: 1,
   },
   switchText: {
     fontSize: 16,
   },
   pressableButton: {
-    backgroundColor: "#3b82f6",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
     marginBottom: 15,
   },
   pressableText: {
-    color: "#fff",
+    color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
   },

@@ -8,15 +8,15 @@ export default function ProductCard({
   onPress,
   isDarkMode,
 }) {
-  const cardBackground = isDarkMode ? "#1f2937" : "#fff";
-  const titleColor = isDarkMode ? "#fff" : "#1f2937";
-  const descColor = isDarkMode ? "#d1d5db" : "#6b7280";
+  const cardBackground = isDarkMode ? "#2a2421" : "#ffffff";
+  const titleColor = isDarkMode ? "#ffffff" : "#000000";
+  const descColor = isDarkMode ? "#d6d0cb" : "#555555";
 
   return (
     <View style={[styles.card, { backgroundColor: cardBackground }]}>
       <Image source={image} style={styles.image} />
       <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
-      <Text style={[styles.description, { color: descColor }]}>
+      <Text style={[styles.description, { color: descColor }]} numberOfLines={3}>
         {description}
       </Text>
       <Text style={styles.price}>€{price}</Text>
@@ -30,45 +30,46 @@ export default function ProductCard({
 
 const styles = StyleSheet.create({
   card: {
-    width: 300,
-    borderRadius: 18,
-    padding: 14,
+    width: "100%",
+    borderRadius: 20,
+    padding: 16,
     marginVertical: 12,
     shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
   },
   image: {
     width: "100%",
-    height: 250,
-    borderRadius: 14,
+    height: 220,
+    borderRadius: 16,
     resizeMode: "cover",
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     marginTop: 14,
   },
   description: {
     fontSize: 14,
-    marginTop: 6,
+    marginTop: 8,
     marginBottom: 10,
+    lineHeight: 20,
   },
   price: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#2563eb",
+    color: "#dd9d4c",
     marginBottom: 14,
   },
   button: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#dd9d4c",
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
+    color: "#ffffff",
     fontWeight: "bold",
     fontSize: 15,
   },

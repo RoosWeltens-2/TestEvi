@@ -7,15 +7,15 @@ export default function BlogCard({
   onPress,
   isDarkMode,
 }) {
-  const cardBackground = isDarkMode ? "#1f2937" : "#fff";
-  const titleColor = isDarkMode ? "#fff" : "#000";
-  const descColor = isDarkMode ? "#d1d5db" : "#333";
+  const cardBackground = isDarkMode ? "#2a2421" : "#ffffff";
+  const titleColor = isDarkMode ? "#ffffff" : "#000000";
+  const descColor = isDarkMode ? "#d6d0cb" : "#555555";
 
   return (
     <View style={[styles.card, { backgroundColor: cardBackground }]}>
       <Image source={image} style={styles.image} />
       <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
-      <Text style={[styles.description, { color: descColor }]}>
+      <Text style={[styles.description, { color: descColor }]} numberOfLines={3}>
         {description}
       </Text>
 
@@ -28,34 +28,41 @@ export default function BlogCard({
 
 const styles = StyleSheet.create({
   card: {
-    width: 300,
-    borderRadius: 18,
-    padding: 14,
+    width: "100%",
+    borderRadius: 20,
+    padding: 16,
     marginVertical: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
   },
   image: {
     width: "100%",
-    height: 170,
-    borderRadius: 14,
+    height: 200,
+    borderRadius: 16,
+    resizeMode: "cover",
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
-    marginTop: 10,
+    marginTop: 12,
   },
   description: {
     fontSize: 14,
-    marginTop: 6,
+    marginTop: 8,
+    marginBottom: 12,
+    lineHeight: 20,
   },
   button: {
-    backgroundColor: "purple",
-    padding: 10,
-    borderRadius: 10,
-    marginTop: 10,
+    backgroundColor: "#dd9d4c",
+    paddingVertical: 12,
+    borderRadius: 12,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
+    color: "#ffffff",
     fontWeight: "bold",
+    fontSize: 15,
   },
 });
