@@ -1,11 +1,23 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-export default function BlogCard({ title, description, image, onPress }) {
+export default function BlogCard({
+  title,
+  description,
+  image,
+  onPress,
+  isDarkMode,
+}) {
+  const cardBackground = isDarkMode ? "#1f2937" : "#fff";
+  const titleColor = isDarkMode ? "#fff" : "#000";
+  const descColor = isDarkMode ? "#d1d5db" : "#333";
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: cardBackground }]}>
       <Image source={image} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
+      <Text style={[styles.description, { color: descColor }]}>
+        {description}
+      </Text>
 
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>Lees blog</Text>
@@ -17,7 +29,6 @@ export default function BlogCard({ title, description, image, onPress }) {
 const styles = StyleSheet.create({
   card: {
     width: 300,
-    backgroundColor: "#fff",
     borderRadius: 18,
     padding: 14,
     marginVertical: 12,

@@ -1,11 +1,24 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-export default function ProductCard({ title, description, price, image, onPress }) {
+export default function ProductCard({
+  title,
+  description,
+  price,
+  image,
+  onPress,
+  isDarkMode,
+}) {
+  const cardBackground = isDarkMode ? "#1f2937" : "#fff";
+  const titleColor = isDarkMode ? "#fff" : "#1f2937";
+  const descColor = isDarkMode ? "#d1d5db" : "#6b7280";
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: cardBackground }]}>
       <Image source={image} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
+      <Text style={[styles.description, { color: descColor }]}>
+        {description}
+      </Text>
       <Text style={styles.price}>€{price}</Text>
 
       <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -18,7 +31,6 @@ export default function ProductCard({ title, description, price, image, onPress 
 const styles = StyleSheet.create({
   card: {
     width: 300,
-    backgroundColor: "#fff",
     borderRadius: 18,
     padding: 14,
     marginVertical: 12,
@@ -28,7 +40,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   image: {
-    width: 250,
+    width: "100%",
     height: 250,
     borderRadius: 14,
     resizeMode: "cover",
@@ -37,11 +49,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 14,
-    color: "#1f2937",
   },
   description: {
     fontSize: 14,
-    color: "#6b7280",
     marginTop: 6,
     marginBottom: 10,
   },

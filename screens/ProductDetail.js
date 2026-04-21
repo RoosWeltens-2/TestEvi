@@ -8,85 +8,136 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-
 const ProductDetail = ({ route }) => {
-  const { type, title, description, price, image } = route.params;
+  const {
+    type,
+    title,
+    description,
+    price = 0,
+    image,
+    isDarkMode = false,
+  } = route.params;
 
   const [quantity, setQuantity] = useState(1);
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1);
+    setQuantity((prevQuantity) => prevQuantity + 1);
   };
 
   const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
+    setQuantity((prevQuantity) =>
+      prevQuantity > 1 ? prevQuantity - 1 : 1
+    );
   };
 
+  const totalPrice = price * quantity;
+
+  const backgroundColor = isDarkMode ? "#111827" : "#ffffff";
+  const cardColor = isDarkMode ? "#1f2937" : "#ffffff";
+  const titleColor = isDarkMode ? "#ffffff" : "#111827";
+  const textColor = isDarkMode ? "#d1d5db" : "#555555";
+  const borderColor = isDarkMode ? "#374151" : "#e5e7eb";
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Image source={image} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
-  
-      {type === "product" && (
-        <>
-          <Text style={styles.price}>€{price}</Text>
-  
-          <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={decreaseQuantity} style={styles.quantityButton}>
-              <Text style={styles.quantityButtonText}>-</Text>
-            </TouchableOpacity>
-  
-            <Text style={styles.quantityText}>{quantity}</Text>
-  
-            <TouchableOpacity onPress={increaseQuantity} style={styles.quantityButton}>
-              <Text style={styles.quantityButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
-  
-          <Text style={styles.totalText}>Aantal producten: {quantity}</Text>
-          <Text style={styles.totalPrice}>Totale prijs: €{price * quantity}</Text>
-        </>
-      )}
+    <ScrollView
+      contentContainerStyle={[styles.container, { backgroundColor }]}
+    >
+      <View
+        style={[
+          styles.contentCard,
+          {
+            backgroundColor: cardColor,
+            borderColor: borderColor,
+          },
+        ]}
+      >
+        <Image source={image} style={styles.image} />
+
+        <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
+
+        <Text style={[styles.description, { color: textColor }]}>
+          {description}
+        </Text>
+
+        {type === "product" && (
+          <>
+            <Text style={styles.price}>€{Number(price).toFixed(2)}</Text>
+
+            <View style={styles.quantityContainer}>
+              <TouchableOpacity
+                onPress={decreaseQuantity}
+                style={styles.quantityButton}
+              >
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
+
+              <Text style={[styles.quantityText, { color: titleColor }]}>
+                {quantity}
+              </Text>
+
+              <TouchableOpacity
+                onPress={increaseQuantity}
+                style={styles.quantityButton}
+              >
+                <Text style={styles.quantityButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={[styles.totalText, { color: textColor }]}>
+              Aantal producten: {quantity}
+            </Text>
+
+            <Text style={styles.totalPrice}>
+              Totale prijs: €{totalPrice.toFixed(2)}
+            </Text>
+          </>
+        )}
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
     padding: 20,
-    alignItems: "center",
-    backgroundColor: "#fff",
+    justifyContent: "center",
+  },
+  contentCard: {
+    borderRadius: 18,
+    padding: 20,
+    borderWidth: 1,
   },
   image: {
-    width: 300,
-    height: 200,
-    borderRadius: 12,
+    width: "100%",
+    height: 240,
+    borderRadius: 14,
     marginBottom: 20,
     resizeMode: "cover",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 12,
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
-    color: "#555",
-    marginBottom: 10,
+    lineHeight: 24,
+    marginBottom: 16,
     textAlign: "center",
   },
   price: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#3b82f6",
     marginBottom: 20,
+    textAlign: "center",
   },
   quantityContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 20,
   },
   quantityButton: {
@@ -108,11 +159,13 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: 18,
     marginBottom: 10,
+    textAlign: "center",
   },
   totalPrice: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#16a34a",
+    textAlign: "center",
   },
 });
 
