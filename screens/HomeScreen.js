@@ -180,6 +180,7 @@ const HomeScreen = ({ navigation }) => {
         onChangeText={setSearchQuery}
       />
 
+
       <View
         style={[
           styles.switchContainer,
@@ -200,18 +201,15 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
 
-      <Pressable
-        style={[styles.pressableButton, { backgroundColor: theme.primary }]}
-        onPress={() => Alert.alert("Klik!", "Je hebt op Pressable gedrukt")}
-      >
-        <Text style={styles.pressableText}>Klik hier</Text>
-      </Pressable>
-
-      <View style={styles.buttonContainer}>
+      <View style={{ width: "100%", marginBottom: 15 }}>
         <Button
-          title="Meer info"
-          color={theme.primary}
-          onPress={() => Alert.alert("Info", "Hier komt later meer info")}
+          title="Reset filters"
+          color="#dd9d4c"
+          onPress={() => {
+            setSelectedCategory("");
+            setSearchQuery("");
+            setSortOption("price-asc");
+          }}
         />
       </View>
 
